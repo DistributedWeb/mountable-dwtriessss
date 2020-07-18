@@ -1,9 +1,9 @@
 const p = require('path').posix
 const { EventEmitter } = require('events')
 
-const hypertrie = require('hypertrie')
-const HypercoreProtocol = require('hypercore-protocol')
-const hypercoreCrypto = require('hypercore-crypto')
+const dwtrie = require('dwtrie')
+const HypercoreProtocol = require('ddatabase-protocol')
+const hypercoreCrypto = require('ddatabase-crypto')
 const thunky = require('thunky')
 const nanoiterator = require('nanoiterator')
 const toStream = require('nanoiterator/to-stream')
@@ -16,13 +16,13 @@ const Flags = {
   MOUNT: 1
 }
 const MOUNT_PREFIX = '/mounts'
-const OWNER = Symbol('mountable-hypertrie-owner')
+const OWNER = Symbol('mountable-dwtrie-owner')
 
 class MountableHypertrie extends EventEmitter {
-  constructor (corestore, key, opts = {}) {
+  constructor (dwebx, key, opts = {}) {
     super()
 
-    this.corestore = corestore
+    this.dwebx = dwebx
     this.key = key
     this.discoveryKey = this.key ? hypercoreCrypto.discoveryKey(this.key) : null
     this.opts = opts
@@ -31,12 +31,12 @@ class MountableHypertrie extends EventEmitter {
     if (opts.valueEncoding) throw new Error('MountableHypertrie does not currently support a valueEncoding option.')
 
     var feed = this.opts.feed
-    if (!feed) feed = this.corestore.default({ key, ...this.opts })
+    if (!feed) feed = this.dwebx.default({ key, ...this.opts })
 
     if (feed[OWNER]) {
       this.trie = feed[OWNER]
     } else {
-      this.trie = opts.trie || hypertrie(null, {
+      this.trie = opts.trie || dwtrie(null, {
         ...opts,
         feed,
         version: null,
@@ -60,7 +60,7 @@ class MountableHypertrie extends EventEmitter {
   }
 
   _ready (cb) {
-    this.corestore.ready(err => {
+    this.dwebx.ready(err => {
       if (err) return cb(err)
       this.trie.ready(err => {
         if (err) return cb(err)
@@ -78,7 +78,7 @@ class MountableHypertrie extends EventEmitter {
     var versionedTrie = (opts && opts.version) ? this._checkouts.get(`${keyString}:${opts.version}`) : null
     if (versionedTrie) return process.nextTick(cb, null, versionedTrie)
 
-    const subfeed = this.corestore.get({ ...opts, key,  version: null, parents: [this.key] })
+    const subfeed = this.dwebx.get({ ...opts, key,  version: null, parents: [this.key] })
     subfeed.ready(err => {
       if (err) this.emit('error', err)
       else this.emit('feed', subfeed)
@@ -87,7 +87,7 @@ class MountableHypertrie extends EventEmitter {
     var trie = this._tries.get(keyString)
     if (opts && opts.cached) return cb(null, trie)
 
-    trie = trie || new MountableHypertrie(this.corestore, key, {
+    trie = trie || new MountableHypertrie(this.dwebx, key, {
       ...this.opts,
       feed: subfeed,
       sparse: this.sparse
@@ -407,7 +407,7 @@ class MountableHypertrie extends EventEmitter {
   }
 
   list (prefix, opts, cb) {
-    // Code duplicated from hypertrie.
+    // Code duplicated from dwtrie.
     if (typeof prefix === 'function') return this.list('', null, prefix)
     if (typeof opts === 'function') return this.list(prefix, null, opts)
 
@@ -485,7 +485,7 @@ class MountableHypertrie extends EventEmitter {
   }
 
   checkout (version) {
-    return new MountableHypertrie(this.corestore, null, {
+    return new MountableHypertrie(this.dwebx, null, {
       ...this.opts,
       trie: this.trie,
       feed: this.feed,
@@ -643,7 +643,7 @@ class MountableHypertrie extends EventEmitter {
     const stream = new HypercoreProtocol(isInitiator, { ...opts })
     this.ready(err => {
       if (err) return stream.destroy(err)
-      this.corestore.replicate(isInitiator, { ...opts, stream })
+      this.dwebx.replicate(isInitiator, { ...opts, stream })
     })
     return stream
   }

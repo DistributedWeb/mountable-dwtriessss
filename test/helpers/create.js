@@ -1,5 +1,5 @@
 const { promisify } = require('util')
-const Corestore = require('corestore')
+const Corestore = require('dwebx')
 const ram = require('random-access-memory')
 
 const MountableHypertrie = require('../..')

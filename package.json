@@ -9,19 +9,19 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/andrewosh/mountable-hypertrie.git"
+    "url": "git+https://github.com/andrewosh/mountable-dwtrie.git"
   },
   "keywords": [
     "mount",
     "mountable",
-    "hypertrie"
+    "dwtrie"
   ],
   "author": "Andrew Osheroff <andrewosh@gmail.com>",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/andrewosh/mountable-hypertrie/issues"
+    "url": "https://github.com/andrewosh/mountable-dwtrie/issues"
   },
-  "homepage": "https://github.com/andrewosh/mountable-hypertrie#readme",
+  "homepage": "https://github.com/andrewosh/mountable-dwtrie#readme",
   "devDependencies": {
     "dwebx": "^1.0.0",
     "raf": "^3.4.1",

@@ -1,12 +1,12 @@
-# mountable-hypertrie
-[![Build Status](https://travis-ci.com/andrewosh/mountable-hypertrie.svg?token=WgJmQm3Kc6qzq1pzYrkx&branch=master)](https://travis-ci.com/andrewosh/mountable-hypertrie)
+# mountable-dwtrie
+[![Build Status](https://travis-ci.com/andrewosh/mountable-dwtrie.svg?token=WgJmQm3Kc6qzq1pzYrkx&branch=master)](https://travis-ci.com/andrewosh/mountable-dwtrie)
 
 A Hypertrie wrapper that supports mounting of sub-Hypertries.
 
 ### Usage
 A MountableHypertrie can be mounted within another MountableHypertrie by using the `mount` command:
 ```js
-const store = corestore(ram)
+const store = dwebx(ram)
 const trie1 = new MountableHypertrie(store)
 const trie2 = new MountableHypertrie(store)
 
@@ -26,12 +26,12 @@ trie1.del('/a', err => {
 })
 ```
 ### API
-`mountable-hypertrie` re-exposes the [`hypertrie`](https://github.com/mafintosh/hypertrie) API, with the addition of the following methods (and a different constructor):
+`mountable-dwtrie` re-exposes the [`dwtrie`](https://github.com/mafintosh/dwtrie) API, with the addition of the following methods (and a different constructor):
 
-#### `const trie = new MountableHypertrie(corestore, key, opts)`
-- `corestore`: any object that implements the corestore interface. For now, it's recommanded to use [`random-access-corestore`](https://github.com/andrewosh/random-access-corestore)
-- `key` is the hypertrie key
-- `opts` can contain any `hypertrie` options
+#### `const trie = new MountableHypertrie(dwebx, key, opts)`
+- `dwebx`: any object that implements the dwebx interface. For now, it's recommanded to use [`random-access-dwebx`](https://github.com/andrewosh/random-access-dwebx)
+- `key` is the dwtrie key
+- `opts` can contain any `dwtrie` options
 
 #### `trie.mount(path, key, opts, cb)`
 - `path` is the mountpoint
@@ -45,7 +45,7 @@ trie1.del('/a', err => {
 }
 ```
 
-_Note: We're still adding support for many hypertrie methods. Here's what's been implemented so far:_
+_Note: We're still adding support for many dwtrie methods. Here's what's been implemented so far:_
 
 - [x] `get`
 - [x] `put`
